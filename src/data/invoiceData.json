@@ -1,0 +1,24 @@
+{
+  "formFields": [
+    {
+      "type": "text",
+      "label": "Invoice ID",
+      "name": "invoiceId",
+      "placeholder": "Enter invoice ID",
+      "required": true
+    },
+    {
+      "type": "date",
+      "label": "Invoice Date",
+      "name": "invoiceDate",
+      "required": true
+    },
+    {
+      "type": "number",
+      "label": "Amount",
+      "name": "amount",
+      "placeholder": "Enter amount",
+      "required": true
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "formFields": [
+    {
+      "type": "text",
+      "label": "Delivery ID",
+      "name": "deliveryId",
+      "placeholder": "Enter delivery ID",
+      "required": true
+    },
+    {
+      "type": "date",
+      "label": "Delivery Date",
+      "name": "deliveryDate",
+      "required": true
+    },
+    {
+      "type": "text",
+      "label": "Delivery Address",
+      "name": "deliveryAddress",
+      "placeholder": "Enter delivery address",
+      "required": true
+    }
+  ]
+}

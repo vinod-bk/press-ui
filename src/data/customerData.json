@@ -1,0 +1,25 @@
+{
+  "formFields": [
+    {
+      "type": "text",
+      "label": "First Name",
+      "name": "firstName",
+      "placeholder": "Enter your first name",
+      "required": true
+    },
+    {
+      "type": "text",
+      "label": "Last Name",
+      "name": "lastName",
+      "placeholder": "Enter your last name",
+      "required": true
+    },
+    {
+      "type": "email",
+      "label": "Email",
+      "name": "email",
+      "placeholder": "Enter your email",
+      "required": true
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "formFields": [
+    {
+      "type": "text",
+      "label": "Order ID",
+      "name": "orderId",
+      "placeholder": "Enter order ID",
+      "required": true
+    },
+    {
+      "type": "date",
+      "label": "Order Date",
+      "name": "orderDate",
+      "required": true
+    },
+    {
+      "type": "number",
+      "label": "Quantity",
+      "name": "quantity",
+      "placeholder": "Enter quantity",
+      "required": true
+    }
+  ]
+}
