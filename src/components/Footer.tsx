@@ -2,7 +2,7 @@ import React from 'react';
 
 const Footer: React.FC = () => (
   <footer>
-    <p>&copy; 2024 Press UI</p>
+    <span>&copy; 2024 Press UI</span>
   </footer>
 );
 

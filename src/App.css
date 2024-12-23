@@ -10,6 +10,7 @@ header {
   padding: 0rem 1rem;
   display: flex;
   align-items: center;
+  justify-content: space-between; /* Add this line */
   height: 60px;
 }
 
@@ -19,6 +20,43 @@ header button {
   color: #fff;
   font-size: 1.5rem;
   margin-right: 1rem;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+}
+
+.profile {
+  position: relative;
+}
+
+.profile-icon {
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 60px;
+  right: 0;
+  background: #333; /* Match header color */
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  display: block; /* Ensure the dropdown is displayed */
+  padding: 0; /* Remove padding */
+}
+
+.dropdown-menu button {
+  background: none;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  color: #fff; /* Match text color with header */
 }
 
 .main-content {
@@ -56,7 +94,14 @@ footer {
   color: #fff;
   text-align: center;
   padding: 0rem 1rem;
-  height: 60px;
+  height: 40px; /* Modify height to 40px */
+  display: flex; /* Add flex display */
+  align-items: center; /* Center content vertically */
+  justify-content: center; /* Center content horizontally */
+}
+
+footer p {
+  margin: 0; /* Add this line to remove margin */
 }
 
 /* Media query for smaller screens */

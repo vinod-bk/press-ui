@@ -2,16 +2,9 @@
   "formFields": [
     {
       "type": "text",
-      "label": "First Name",
-      "name": "firstName",
-      "placeholder": "Enter your first name",
-      "required": true
-    },
-    {
-      "type": "text",
-      "label": "Last Name",
-      "name": "lastName",
-      "placeholder": "Enter your last name",
+      "label": "Customer Name",
+      "name": "customerName",
+      "placeholder": "Enter customer name",
       "required": true
     },
     {
@@ -19,6 +12,27 @@
       "label": "Email",
       "name": "email",
       "placeholder": "Enter your email",
+      "required": true
+    },
+    {
+      "type": "text",
+      "label": "GST Number",
+      "name": "gstNumber",
+      "placeholder": "Enter GST number",
+      "required": true
+    },
+    {
+      "type": "text",
+      "label": "Mobile Number",
+      "name": "mobileNumber",
+      "placeholder": "Enter mobile number",
+      "required": true
+    },
+    {
+      "type": "text",
+      "label": "State",
+      "name": "state",
+      "placeholder": "Enter state",
       "required": true
     }
   ]

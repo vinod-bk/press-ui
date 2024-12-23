@@ -1,0 +1,74 @@
+{
+  "formFields": [
+    {
+      "type": "text",
+      "label": "Customer Name",
+      "name": "customerName",
+      "placeholder": "Enter customer name",
+      "required": true,
+      "layout": "half"
+    },
+    {
+      "type": "text",
+      "label": "GST Number",
+      "name": "gstNumber",
+      "placeholder": "Enter GST number",
+      "required": true,
+      "layout": "half"
+    },
+    {
+      "type": "text",
+      "label": "Mobile Number",
+      "name": "mobileNumber",
+      "placeholder": "Enter mobile number",
+      "required": true,
+      "layout": "half"
+    },
+    {
+      "type": "text",
+      "label": "State",
+      "name": "state",
+      "placeholder": "Enter state",
+      "required": true,
+      "layout": "half"
+    },
+    {
+      "type": "list",
+      "label": "Order Details",
+      "name": "orderDetails",
+      "fields": [
+        {
+          "type": "number",
+          "label": "Serial Number",
+          "name": "serialNumber",
+          "required": true
+        },
+        {
+          "type": "text",
+          "label": "Item Name",
+          "name": "itemName",
+          "required": true
+        },
+        {
+          "type": "number",
+          "label": "Quantity",
+          "name": "quantity",
+          "required": true
+        },
+        {
+          "type": "number",
+          "label": "Rate",
+          "name": "rate",
+          "required": true
+        },
+        {
+          "type": "number",
+          "label": "Amount",
+          "name": "amount",
+          "required": true,
+          "readOnly": true
+        }
+      ]
+    }
+  ]
+}

@@ -5,7 +5,11 @@ import invoiceData from '../data/invoiceData.json';
 const InvoiceDetails: React.FC = () => (
   <div>
     <h2>Invoice Details</h2>
-    <DynamicForm formData={invoiceData} />
+    <div className="card">
+      <div className="card-body">
+        <DynamicForm formData={invoiceData} />
+      </div>
+    </div>
   </div>
 );
 
