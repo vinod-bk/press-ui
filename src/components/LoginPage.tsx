@@ -1,6 +1,16 @@
 import React, { useState } from "react";
-import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap CSS
-import offsetPrintingImage from "../images/offset-printing.png"; // Import the image
+import offsetPrintingImage from "../images/offset-printing.png";
+import {
+  Container,
+  Box,
+  Card,
+  CardContent,
+  TextField,
+  Button,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material"; // Import MUI components
 
 interface LoginPageProps {
   onLogin: (userId: string, password: string) => void;
@@ -14,49 +24,70 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
     onLogin(userId, password);
   };
 
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
+
   return (
-    <div className="d-flex justify-content-center align-items-center vh-100">
-      <div className="container">
-        <div className="row justify-content-center align-items-center">
-          <div className="col-12 col-md-6 mb-4 mb-md-0">
-            <img
-              src={offsetPrintingImage}
-              alt="Offset Printing"
-              className="img-fluid"
-              style={{ maxWidth: "100%" }}
-            />
-          </div>
-          <div className="col-12 col-md-4">
-            <div className="card p-4">
-              <h2 className="card-title text-center">Login</h2>
-              <div className="card-body">
-                <div className="mb-3">
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="User ID"
-                    value={userId}
-                    onChange={(e) => setUserId(e.target.value)}
-                  />
-                </div>
-                <div className="mb-3">
-                  <input
-                    type="password"
-                    className="form-control"
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
-                </div>
-                <button className="btn btn-primary w-100" onClick={handleLogin}>
+    <Container>
+      <Box
+        display="flex"
+        flexDirection={isSmallScreen ? "column" : "row"}
+        alignItems="center"
+        width="100%"
+        height={`calc(100vh - ${theme.mixins.toolbar.minHeight}px)`}
+      >
+        <Box
+          mb={isSmallScreen ? 4 : 0}
+          mr={isSmallScreen ? 0 : 4}
+          width={isSmallScreen ? "100%" : "50%"}
+          maxWidth="600px"
+        >
+          <img
+            src={offsetPrintingImage}
+            alt="Offset Printing"
+            className="img-fluid"
+            style={{ maxWidth: "100%" }}
+          />
+        </Box>
+        <Box width={isSmallScreen ? "100%" : "50%"} maxWidth="400px">
+          <Card>
+            <CardContent>
+              <Typography variant="h5" component="h2" align="center">
+                Login
+              </Typography>
+              <Box mt={2}>
+                <TextField
+                  fullWidth
+                  label="User ID"
+                  value={userId}
+                  onChange={(e) => setUserId(e.target.value)}
+                  margin="normal"
+                  size="small"
+                />
+                <TextField
+                  fullWidth
+                  label="Password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  margin="normal"
+                  size="small"
+                />
+                <Button
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                  onClick={handleLogin}
+                  sx={{ mt: 2 }}
+                >
                   Login
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+                </Button>
+              </Box>
+            </CardContent>
+          </Card>
+        </Box>
+      </Box>
+    </Container>
   );
 };
 

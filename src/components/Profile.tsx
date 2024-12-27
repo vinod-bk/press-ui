@@ -1,30 +1,39 @@
-import React, { useState } from 'react';
-import profileIcon from '../images/profile-icon-2.png'; // Import the profile icon
+import React from 'react';
+import { Menu, MenuItem, IconButton, Avatar } from '@mui/material';
+import { useState } from 'react';
+import ProfileIcon from '@mui/icons-material/AccountCircle';
 
-interface ProfileProps {
-  onLogout: () => void;
-}
+const Profile: React.FC<{ onLogout: () => void }> = ({ onLogout }) => {
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-const Profile: React.FC<ProfileProps> = ({ onLogout }) => {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
 
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleLogout = () => {
+    onLogout();
+    handleClose();
   };
 
   return (
-    <div className="profile">
-      <img
-        src={profileIcon} // Use the imported profile icon
-        alt="Profile"
-        onClick={toggleDropdown}
-        className="profile-icon"
-      />
-      {isDropdownOpen && (
-        <div className="dropdown-menu">
-          <button onClick={onLogout}>Logout</button>
-        </div>
-      )}
+    <div>
+      <IconButton onClick={handleClick}>
+        <Avatar alt="Profile">
+          <ProfileIcon/>
+        </Avatar>
+      </IconButton>
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+      >
+        <MenuItem onClick={handleClose}>Profile</MenuItem>
+        <MenuItem onClick={handleLogout}>Logout</MenuItem>
+      </Menu>
     </div>
   );
 };

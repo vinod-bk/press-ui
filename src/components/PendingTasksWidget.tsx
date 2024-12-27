@@ -1,4 +1,6 @@
 import React from 'react';
+import Box from "@mui/material/Box";
+import Paper from "@mui/material/Paper";
 import DynamicForm from './DynamicForm';
 
 const PendingTasksWidget: React.FC = () => {
@@ -25,12 +27,12 @@ const PendingTasksWidget: React.FC = () => {
   };
 
   return (
-    <div className="card">
-      <div className="card-body">
-        <h3 className="card-title">Pending Actions</h3>
-        <DynamicForm formData={formData} initialFormState={initialFormState} displayOnly={true} />
-      </div>
-    </div>
+    <Box>
+      <h2>Pending Actions</h2>
+      <Paper sx={{ padding: 2 }}>
+      <DynamicForm formData={formData} initialFormState={initialFormState} displayOnly={true} />
+      </Paper>
+    </Box>
   );
 };
 

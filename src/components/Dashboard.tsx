@@ -1,12 +1,14 @@
 import React from 'react';
+import Box from "@mui/material/Box";
+import Paper from "@mui/material/Paper";
 import PendingTasksWidget from './PendingTasksWidget';
 
 const Dashboard: React.FC = () => {
   return (
-    <div className="dashboard">
-      <h2>Dashboard</h2>
+    <Box>
+      <h1>Dashboard</h1>
       <PendingTasksWidget />
-    </div>
+    </Box>
   );
 };
 

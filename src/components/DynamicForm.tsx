@@ -1,4 +1,24 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import InputLabel from "@mui/material/InputLabel";
+import FormControl from "@mui/material/FormControl";
+import Button from "@mui/material/Button";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DateField, LocalizationProvider } from "@mui/x-date-pickers";
+import dayjs, {Dayjs} from 'dayjs';
+import advancedFormat from 'dayjs/plugin/advancedFormat';
+
+dayjs.extend(advancedFormat);
 
 interface FormField {
   type: string;
@@ -18,123 +38,231 @@ interface DynamicFormProps {
   displayOnly?: boolean;
 }
 
-const renderTextField = (field: FormField, formState: any, handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void) => {
-  const fieldClass = field.layout === 'half' ? 'col-md-6' : 'col-md-12';
+const renderDateField = (
+  field: FormField,
+  formState: any,
+  handleDateFieldChange: (date: Dayjs | null, name: string) => void
+) => {
   return (
-    <div className={`mb-3 ${fieldClass}`} key={field.name}>
-      {field.label && <label className="form-label">{field.label}</label>}
-      <input
-        type={field.type}
-        className="form-control"
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      {" "}
+      <DateField
+        key={field.name}
+        label={field.label}
         name={field.name}
-        placeholder={field.placeholder}
         required={field.required}
-        readOnly={field.readOnly}
-        value={formState[field.name] || ''}
-        onChange={handleInputChange}
+        InputProps={{ readOnly: field.readOnly }}
+        value={formState[field.name] ? dayjs(formState[field.name]) : null}
+        onChange={(e) =>
+          handleDateFieldChange(dayjs(e), field.name)
+        }
+        format="DD-MM-YYYY"
+        fullWidth
+        margin="normal"
+        size="small"
       />
-    </div>
+    </LocalizationProvider>
   );
 };
 
-const renderSelectField = (field: FormField, formState: any, handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void) => {
-  const fieldClass = field.layout === 'half' ? 'col-md-6' : 'col-md-12';
+const renderTextField = (
+  field: FormField,
+  formState: any,
+  handleTextFieldChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+) => {
   return (
-    <div className={`mb-3 ${fieldClass}`} key={field.name}>
-      {field.label && <label className="form-label">{field.label}</label>}
-      <select
-        className="form-select"
+    <TextField
+      key={field.name}
+      label={field.label}
+      type={field.type}
+      name={field.name}
+      placeholder={field.placeholder}
+      required={field.required}
+      InputProps={{ readOnly: field.readOnly }}
+      value={formState[field.name] || ""}
+      onChange={handleTextFieldChange}
+      fullWidth
+      margin="normal"
+      size="small"
+    />
+  );
+};
+
+const renderSelectField = (
+  field: FormField,
+  formState: any,
+  handleSelectFieldChange: (e: SelectChangeEvent<HTMLSelectElement>) => void
+) => {
+  return (
+    <FormControl fullWidth margin="normal" key={field.name}>
+      <InputLabel>{field.label}</InputLabel>
+      <Select
         name={field.name}
+        value={formState[field.name] || ""}
+        onChange={handleSelectFieldChange}
         required={field.required}
-        value={formState[field.name] || ''}
-        onChange={handleInputChange}
       >
         {field.options?.map((option) => (
-          <option key={option.value} value={option.value}>
+          <MenuItem key={option.value} value={option.value}>
             {option.label}
-          </option>
+          </MenuItem>
         ))}
-      </select>
-    </div>
+      </Select>
+    </FormControl>
   );
 };
 
-const renderTextareaField = (field: FormField, formState: any, handleInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void) => {
-  const fieldClass = field.layout === 'half' ? 'col-md-6' : 'col-md-12';
+const renderTextareaField = (
+  field: FormField,
+  formState: any,
+  handleTextareaFieldChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void
+) => {
   return (
-    <div className={`mb-3 ${fieldClass}`} key={field.name}>
-      {field.label && <label className="form-label">{field.label}</label>}
-      <textarea
-        className="form-control"
-        name={field.name}
-        placeholder={field.placeholder}
-        required={field.required}
-        rows={4}
-        value={formState[field.name] || ''}
-        onChange={handleInputChange}
-      />
-    </div>
+    <TextField
+      key={field.name}
+      label={field.label}
+      name={field.name}
+      placeholder={field.placeholder}
+      required={field.required}
+      InputProps={{ readOnly: field.readOnly }}
+      value={formState[field.name] || ""}
+      onChange={handleTextareaFieldChange}
+      fullWidth
+      margin="normal"
+      multiline
+      rows={4}
+    />
   );
 };
 
-const ListItem: React.FC<{ subField: FormField; item: any; idx: number; handleListChange: (index: number, field: string, value: any) => void; displayOnly: boolean }> = ({ subField, item, idx, handleListChange, displayOnly }) => (
-  <td key={subField.name}>
-    <input
+const ListItem: React.FC<{
+  subField: FormField;
+  item: any;
+  idx: number;
+  handleListChange: (index: number, field: string, value: any) => void;
+  displayOnly: boolean;
+}> = ({ subField, item, idx, handleListChange, displayOnly }) => (
+  <TableCell key={subField.name}>
+    <TextField
       type={subField.type}
-      className="form-control"
       name={subField.name}
       placeholder={subField.placeholder}
       required={subField.required}
-      readOnly={subField.readOnly || displayOnly || subField.name === 'serialNumber'}
-      value={item[subField.name] || ''}
+      InputProps={{
+        readOnly:
+          subField.readOnly || displayOnly || subField.name === "serialNumber",
+      }}
+      value={item[subField.name] || ""}
       onChange={(e) => handleListChange(idx, subField.name!, e.target.value)}
-      style={displayOnly ? { pointerEvents: 'none' } : {}}
+      fullWidth
+      size="small"
     />
-  </td>
+  </TableCell>
 );
 
-const renderListField = (field: FormField, formState: any, handleListChange: (index: number, field: string, value: any) => void, setFormState: React.Dispatch<React.SetStateAction<any>>, displayOnly: boolean) => {
+const renderListField = (
+  field: FormField,
+  formState: any,
+  handleListChange: (index: number, field: string, value: any) => void,
+  setFormState: React.Dispatch<React.SetStateAction<any>>,
+  displayOnly: boolean
+) => {
   return (
-    <div className="mb-3" key={field.name}>
-      {field.label && <label className="form-label">{field.label}</label>}
-      <table className="table">
-        <thead>
-          <tr>
-            {field.fields?.map((subField) => (
-              <th key={subField.name}>{subField.label}</th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {(formState[field.name] || []).map((item: any, idx: number) => (
-            <tr key={idx}>
+    <div key={field.name}>
+      <InputLabel>{field.label}</InputLabel>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
               {field.fields?.map((subField) => (
-                <ListItem key={subField.name} subField={subField} item={item} idx={idx} handleListChange={handleListChange} displayOnly={displayOnly} />
+                <TableCell key={subField.name}>{subField.label}</TableCell>
               ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {(formState[field.name] || []).map((item: any, idx: number) => (
+              <TableRow key={idx}>
+                {field.fields?.map((subField) => (
+                  <ListItem
+                    key={subField.name}
+                    subField={subField}
+                    item={item}
+                    idx={idx}
+                    handleListChange={handleListChange}
+                    displayOnly={displayOnly}
+                  />
+                ))}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
       {!displayOnly && (
-        <button
-          type="button"
-          className="btn btn-secondary"
-          onClick={() => setFormState((prevState: any) => ({
-            ...prevState,
-            [field.name!]: [...(prevState[field.name] || []), { serialNumber: (prevState[field.name]?.length || 0) + 1 }],
-          }))}
+        <Button
+          // variant="contained"
+          color="secondary"
+          onClick={() =>
+            setFormState((prevState: any) => ({
+              ...prevState,
+              [field.name!]: [
+                ...(prevState[field.name] || []),
+                { serialNumber: (prevState[field.name]?.length || 0) + 1 },
+              ],
+            }))
+          }
+          style={{ marginTop: "16px" }}
         >
           Add Item
-        </button>
+        </Button>
       )}
     </div>
   );
 };
 
-const DynamicForm: React.FC<DynamicFormProps> = ({ formData, initialFormState = {}, displayOnly = false }) => {
+const DynamicForm: React.FC<DynamicFormProps> = ({
+  formData,
+  initialFormState = {},
+  displayOnly = false,
+}) => {
   const [formState, setFormState] = useState<any>(initialFormState);
 
-  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+  useEffect(() => {
+    // Initialize list fields with 5 default elements
+    const initialListState = formData.formFields.reduce((acc, field) => {
+      if (field.type === 'list') {
+        acc[field.name!] = Array.from({ length: 5 }, (_, index) => ({ serialNumber: index + 1 }));
+      }
+      return acc;
+    }, {} as any);
+
+    setFormState((prevState: any) => ({
+      ...prevState,
+      ...initialListState,
+    }));
+  }, [formData.formFields]);
+
+  const handleDateFieldChange = useCallback(
+    (date: Dayjs | null, name: string) => {
+      setFormState((prevState: any) => ({
+        ...prevState,
+        [name]: date,
+      }));
+    },
+    []
+  );
+
+  const handleTextFieldChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = e.target;
+      setFormState((prevState: any) => ({
+        ...prevState,
+        [name]: value,
+      }));
+    },
+    []
+  );
+
+  const handleSelectFieldChange = useCallback((e: SelectChangeEvent<any>) => {
     const { name, value } = e.target;
     setFormState((prevState: any) => ({
       ...prevState,
@@ -142,51 +270,95 @@ const DynamicForm: React.FC<DynamicFormProps> = ({ formData, initialFormState = 
     }));
   }, []);
 
-  const handleListChange = useCallback((index: number, field: string, value: any) => {
-    const updatedList = [...(formState.orderDetails || [])];
-    updatedList[index] = {
-      ...updatedList[index],
-      [field]: value,
-      amount: updatedList[index].quantity * updatedList[index].rate,
-    };
-    setFormState((prevState: any) => ({
-      ...prevState,
-      orderDetails: updatedList,
-    }));
-  }, [formState]);
+  const handleTextareaFieldChange = useCallback(
+    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      const { name, value } = e.target;
+      setFormState((prevState: any) => ({
+        ...prevState,
+        [name]: value,
+      }));
+    },
+    []
+  );
+
+  const handleListChange = useCallback(
+    (index: number, field: string, value: any) => {
+      const updatedList = [...(formState.orderDetails || [])];
+      updatedList[index] = {
+        ...updatedList[index],
+        [field]: value,
+        amount: updatedList[index].quantity * updatedList[index].rate,
+      };
+      setFormState((prevState: any) => ({
+        ...prevState,
+        orderDetails: updatedList,
+      }));
+    },
+    [formState]
+  );
 
   const handleClear = useCallback(() => {
     setFormState(initialFormState);
   }, [initialFormState]);
 
   return (
-    <form className="dynamic-form">
-      <div className="row">
+    <form>
+      <Box>
         {formData.formFields.map((field) => {
           switch (field.type) {
-            case 'text':
-            case 'email':
-            case 'number':
-            case 'date':
-              return renderTextField(field, formState, handleInputChange);
-            case 'select':
-              return renderSelectField(field, formState, handleInputChange);
-            case 'textarea':
-              return renderTextareaField(field, formState, handleInputChange);
-            case 'list':
-              return renderListField(field, formState, handleListChange, setFormState, displayOnly);
+            case "text":
+            case "email":
+            case "number":
+              return renderTextField(field, formState, handleTextFieldChange);
+            case "date":
+              return renderDateField(field, formState, handleDateFieldChange);
+            case "select":
+              return renderSelectField(
+                field,
+                formState,
+                handleSelectFieldChange
+              );
+            case "textarea":
+              return renderTextareaField(
+                field,
+                formState,
+                handleTextareaFieldChange
+              );
+            case "list":
+              return renderListField(
+                field,
+                formState,
+                handleListChange,
+                setFormState,
+                displayOnly
+              );
             default:
               return null;
           }
         })}
-      </div>
-      <div className="d-flex justify-content-end">
-        <button type="button" className="btn btn-secondary me-2" onClick={handleClear}>
-          Cancel
-        </button>
-        <button type="submit" className="btn btn-primary">
+      </Box>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          marginTop: "16px",
+        }}
+      >
+        <Button
+          // variant="contained"
+          color="secondary"
+          onClick={handleClear}
+          style={{ marginRight: "8px" }}
+        >
+          Clear
+        </Button>
+        <Button 
+          variant="contained" 
+          color="primary" 
+          type="submit"
+        >
           Submit
-        </button>
+        </Button>
       </div>
     </form>
   );
