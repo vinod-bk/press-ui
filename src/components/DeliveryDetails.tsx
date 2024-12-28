@@ -7,7 +7,6 @@ import deliveryData from '../data/deliveryData.json';
 const DeliveryDetails: React.FC = () => {
   return (
     <Box>
-      <h1>Delivery Details</h1>
       <Paper sx={{ padding: 2 }}>
         <DynamicForm formData={deliveryData} />
       </Paper>

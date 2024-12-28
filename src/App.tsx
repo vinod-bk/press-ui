@@ -8,7 +8,7 @@ import LoginPage from "./components/LoginPage";
 
 import printingLogo from "./images/printing.png";
 import { PageContainer } from "@toolpad/core/PageContainer";
-import { AppProvider } from "@toolpad/core/AppProvider";
+import { AppProvider } from "@toolpad/core/react-router-dom";
 import {
   DashboardLayout,
   type SidebarFooterProps,
@@ -17,17 +17,11 @@ import {
 import { createTheme, useColorScheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import Tooltip from "@mui/material/Tooltip";
-import Popover from "@mui/material/Popover";
 import IconButton from "@mui/material/IconButton";
-import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import FormControl from "@mui/material/FormControl";
-import FormLabel from "@mui/material/FormLabel";
 import LightModeIcon from "@mui/icons-material/LightMode";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
 
-const demoTheme = createTheme({
+const theme = createTheme({
   cssVariables: {
     colorSchemeSelector: "data-toolpad-color-scheme",
   },
@@ -48,76 +42,30 @@ const ToolbarActions = React.memo(({ onLogout }: { onLogout: () => void }) => {
 
   const handleThemeChange = React.useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      setMode(event.target.value as "light" | "dark" | "system");
+      const newMode =
+        theme.palette.mode === "light" ? "dark" : "light";
+      setMode(newMode);
+      theme.palette.mode = newMode;
     },
     [setMode]
-  );
-
-  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-  const [menuAnchorEl, setMenuAnchorEl] = React.useState<HTMLElement | null>(
-    null
-  );
-
-  const toggleMenu = React.useCallback(
-    (event: React.MouseEvent<HTMLElement>) => {
-      setMenuAnchorEl(isMenuOpen ? null : event.currentTarget);
-      setIsMenuOpen((previousIsMenuOpen) => !previousIsMenuOpen);
-    },
-    [isMenuOpen]
   );
 
   return (
     <React.Fragment>
       <Box>
-        <Tooltip title="Settings" enterDelay={1000}>
-          <div>
-            <IconButton
-              type="button"
-              aria-label="settings"
-              onClick={toggleMenu}
-            >
-              <LightModeIcon />
-            </IconButton>
-          </div>
-        </Tooltip>
-        <Popover
-          open={isMenuOpen}
-          anchorEl={menuAnchorEl}
-          onClose={toggleMenu}
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "left",
+        <IconButton
+          type="button"
+          aria-label="settings"
+          onClick={(event) => {
+            handleThemeChange(event as any);
           }}
-          disableAutoFocus
         >
-          <Box sx={{ p: 2 }}>
-            <FormControl>
-              <FormLabel id="custom-theme-switcher-label">Theme</FormLabel>
-              <RadioGroup
-                aria-labelledby="custom-theme-switcher-label"
-                defaultValue="system"
-                name="custom-theme-switcher"
-                onChange={handleThemeChange}
-              >
-                <FormControlLabel
-                  value="light"
-                  control={<Radio />}
-                  label="Light"
-                />
-                <FormControlLabel
-                  value="system"
-                  control={<Radio />}
-                  label="System"
-                />
-                <FormControlLabel
-                  value="dark"
-                  control={<Radio />}
-                  label="Dark"
-                />
-              </RadioGroup>
-            </FormControl>
-          </Box>
-        </Popover>
+          {theme.palette.mode === "dark" ? (
+            <LightModeIcon />
+          ) : (
+            <DarkModeIcon />
+          )}
+        </IconButton>
       </Box>
       <Box>
         <Profile onLogout={onLogout} />
@@ -129,8 +77,6 @@ const ToolbarActions = React.memo(({ onLogout }: { onLogout: () => void }) => {
 const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
-
-  console.log("App, isAuthenticated = ", isAuthenticated);
 
   const handleLogin = (userId: string, password: string) => {
     if (userId === "admin" && password === "admin") {
@@ -160,23 +106,40 @@ const App: React.FC = () => {
   return (
     <AppProvider
       navigation={NAVIGATION}
-      theme={demoTheme}
+      theme={theme}
       branding={{
         logo: <img src={printingLogo} alt="logo" />,
         title: "Printing Press Management",
       }}
     >
-      <DashboardLayout
-        slots={{
-          sidebarFooter: SidebarFooter,
-          toolbarActions: () => <ToolbarActions onLogout={handleLogout} />,
-        }}
-        defaultSidebarCollapsed
-      >
-        <PageContainer>
-          <Content />
-        </PageContainer>
-      </DashboardLayout>
+      <Routes>
+        <Route
+          path="/login"
+          element={<LoginPage onLogin={handleLogin} />}
+        ></Route>
+        <Route
+          path="/*"
+          element={
+            isAuthenticated ? (
+              <DashboardLayout
+                slots={{
+                  sidebarFooter: SidebarFooter,
+                  toolbarActions: () => (
+                    <ToolbarActions onLogout={handleLogout} />
+                  ),
+                }}
+                defaultSidebarCollapsed
+              >
+                <PageContainer breadcrumbs={undefined}>
+                  <Content />
+                </PageContainer>
+              </DashboardLayout>
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        ></Route>
+      </Routes>
     </AppProvider>
   );
 };

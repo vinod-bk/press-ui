@@ -14,27 +14,27 @@ const NAVIGATION: Navigation = [
   },
   {
     segment: 'customers',
-    title: 'Customers',
+    title: 'Customer Details',
     icon: <AddBusinessIcon />,
   },
   {
     segment: 'orders',
-    title: 'Orders',
+    title: 'Order Details',
     icon: <AddShoppingCartIcon />,
   },
   {
     segment: 'invoices',
-    title: 'Invoices',
+    title: 'Invoice Details',
     icon: <ReceiptIcon />,
   },
   {
     segment: 'deliveries',
-    title: 'Deliveries',
+    title: 'Delivery Details',
     icon: <LocalShippingIcon />,
   },  
   {
     segment: 'sales',
-    title: 'Sales',
+    title: 'Sales Details',
     icon: <SellIcon />,
   }
 ];

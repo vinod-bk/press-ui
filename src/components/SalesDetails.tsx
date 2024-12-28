@@ -7,7 +7,6 @@ import salesData from '../data/salesData.json';
 const SalesDetails: React.FC = () => {
   return (
     <Box>
-      <h1>Sales Details</h1>
       <Paper sx={{ padding: 2 }}>
         <DynamicForm formData={salesData} />
       </Paper>
